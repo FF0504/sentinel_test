@@ -1,0 +1,31 @@
+Sentinel的官方标题是：分布式系统的流量防卫兵。
+Sentinel的功能和细节比较多，可以对资源的访问流量进行限制等一些特点。
+下载jar包：https://github.com/alibaba/Sentinel/releases/download/1.6.0/sentinel-dashboard-1.6.0.jar
+使用java -jar sentinel-dashboard-1.6.0.jar 启动
+        或者指定参数java -Dserver.port=8080 -Dcsp.sentinel.dashboard.server=localhost:8080 -Dproject.name=sentinel-dashboard -jar sentinel-dashboard-1.6.0.jar
+           参数	                                        作用
+        -Dcsp.sentinel.dashboard.server=localhost:8080	向 Sentinel 接入端指定控制台的地址
+        -Dproject.name=sentinel-dashboard	向 Sentinel 指定应用名称，比如上面对应的应用名称就为 sentinel-dashboard
+
+Sentinel的1.6版本支持登录功能，默认的账号密码都是是sentinel
+如果想修改账号密码，启动时加入
+        -Dsentinel.dashboard.auth.username=sentinel 用于指定控制台的登录用户名为 sentinel
+        -Dsentinel.dashboard.auth.password=123456 用于指定控制台的登录密码为 123456
+
+        -Dserver.servlet.session.timeout=7200 用于指定 Spring Boot 服务端 session 的过期时间，
+        如 7200 表示 7200 秒；60m 表示 60 分钟，默认为 30 分钟
+
+
+注解说明:
+        @SentinelResource注解灵活的定义控制资源以及如何配置控制策略。
+        value：资源名称，必需项填
+        blockHandler(blockHandlerClass): blockHandler对应处理 BlockException 的函数名称，可选项。
+                     blockHandler 函数访问范围需要是 public，返回类型需要与原方法相匹配，
+                     参数类型需要和原方法相匹配并且最后加一个额外的参数，类型为 BlockException。
+                     blockHandler 函数默认需要和原方法在同一个类中。若希望使用其他类的函数，
+                     则可以指定 blockHandlerClass 为对应的类的 Class 对象，注意对应的函数必需为 static 函数，否则无法解析。
+        fallback：fallback 函数名称，可选项，
+                  用于在抛出异常的时候提供 fallback 处理逻辑。
+                  fallback 函数可以针对所有类型的异常（除了 exceptionsToIgnore里面排除掉的异常类型）进行处理。
+                  fallback 函数签名和位置要求：返回值类型必须与原函数返回值类型一致；
+                   方法参数列表需要和原函数一致，或者可以额外多一个 Throwable 类型的参数用于接收对应的异常。
